@@ -47,11 +47,35 @@ public class CreateUserTest extends BaseApiTest {
     }
 
     @Test
-    @DisplayName("Ожидаем ошибку при создании пользователя без обязательного поля")
-    @Description("Проверяем, что регистрация не прошла если не передано обязательное поле")
+    @DisplayName("Ожидаем ошибку при создании пользователя без обязательного поля имя")
+    @Description("Проверяем, что регистрация не прошла если не передано обязательное поле имя")
     public void testCreateUserNoName() {
         UserModel user = getRandomUser();
         user.setName(null);
+        Response response = regUser(user);
+        response.then()
+                .statusCode(HTTP_FORBIDDEN)
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+    @Test
+    @DisplayName("Ожидаем ошибку при создании пользователя без обязательного email")
+    @Description("Проверяем, что регистрация не прошла если не передано обязательное поле email")
+    public void testCreateUserNoEmail() {
+        UserModel user = getRandomUser();
+        user.setEmail(null);
+        Response response = regUser(user);
+        response.then()
+                .statusCode(HTTP_FORBIDDEN)
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+    @Test
+    @DisplayName("Ожидаем ошибку при создании пользователя без обязательного поля пароль")
+    @Description("Проверяем, что регистрация не прошла если не передано обязательное поле пароль")
+    public void testCreateUserNoPassword() {
+        UserModel user = getRandomUser();
+        user.setPassword(null);
         Response response = regUser(user);
         response.then()
                 .statusCode(HTTP_FORBIDDEN)

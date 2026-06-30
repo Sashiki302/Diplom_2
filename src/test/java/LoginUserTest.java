@@ -41,10 +41,21 @@ public class LoginUserTest extends BaseApiTest {
     }
 
     @Test
-    @DisplayName("Ошибка авторизации с неверным логином и паролем")
-    @Description("Проверяем, что появляется ошибка 401 при вводе некорректного логина и пароля")
-    public void testLoginWrongLogPass() {
-        UserModel badCredentials = new UserModel("helloworld@yandex.ru", "12345678");
+    @DisplayName("Ошибка авторизации с неверным логином")
+    @Description("Проверяем, что появляется ошибка 401 при вводе некорректного логина")
+    public void testLoginWrongLog() {
+        UserModel badCredentials = new UserModel("helloworld@yandex.ru", user.getPassword());
+        Response response = loginUser(badCredentials);
+        response.then()
+                .statusCode(HTTP_UNAUTHORIZED)
+                .body("success", equalTo(false))
+                .body("message", equalTo("email or password are incorrect"));
+    }
+    @Test
+    @DisplayName("Ошибка авторизации с неверным паролем")
+    @Description("Проверяем, что появляется ошибка 401 при вводе некорректного пароля")
+    public void testLoginWrongPass() {
+        UserModel badCredentials = new UserModel(user.getEmail(), "12345678");
         Response response = loginUser(badCredentials);
         response.then()
                 .statusCode(HTTP_UNAUTHORIZED)
